@@ -1,6 +1,6 @@
 Package: RKaggle
 Title: 'Kaggle' Dataset Downloader 'API'
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Benjamin", "Smith", 
            email = "benyamin.smith@mail.utoronto.ca", 
@@ -11,13 +11,14 @@ License: MIT + file LICENSE
 URL: https://github.com/benyamindsmith/RKaggle
 BugReports: https://github.com/benyamindsmith/RKaggle/issues
 Encoding: UTF-8
-Imports: httr, readr, withr, jsonlite, arrow, readODS, tibble, readxl
+Imports: httr, readr, withr, jsonlite, arrow, readODS, readxl, sf
 Depends: R (>= 4.1.0)
-Suggests: conflicted
+Suggests: tibble, conflicted
 RoxygenNote: 7.3.2
 NeedsCompilation: no
-Packaged: 2025-04-01 20:24:14 UTC; ben29
-Author: Benjamin Smith [aut, cre] (<https://orcid.org/0009-0007-2206-0177>)
+Packaged: 2025-05-09 03:42:44 UTC; ben29
+Author: Benjamin Smith [aut, cre] (ORCID:
+    <https://orcid.org/0009-0007-2206-0177>)
 Maintainer: Benjamin Smith <benyamin.smith@mail.utoronto.ca>
 Repository: CRAN
-Date/Publication: 2025-04-02 17:50:07 UTC
+Date/Publication: 2025-05-09 04:00:02 UTC

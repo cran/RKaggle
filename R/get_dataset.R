@@ -4,7 +4,7 @@
 #'
 #' @param dataset A character string specifying the dataset identifier on Kaggle. It should follow the format "username/dataset-name".
 #'
-#' @details The function constructs the metadata URL based on the provided dataset identifier, then sends a GET request using the \code{httr} package. If the request is successful, the returned JSON metadata is parsed. The function searches the metadata for a file with an encoding format of "application/zip", then downloads that ZIP file using a temporary file (managed by the \code{withr} package). After unzipping the file into a temporary directory, the function locates all files with extensions corresponding to popular dataset formats (\code{csv}, \code{tsv}, \code{xlsx}, \code{json}, \code{rds}, and \code{parquet}). Each file is then read using the appropriate function:
+#' @details The function constructs the metadata URL based on the provided dataset identifier, then sends a GET request using the \code{httr} package. If the request is successful, the returned JSON metadata is parsed. The function searches the metadata for a file with an encoding format of "application/zip", then downloads that ZIP file using a temporary file (managed by the \code{withr} package). After unzipping the file into a temporary directory, the function locates all files with extensions corresponding to popular dataset formats (\code{csv}, \code{tsv}, \code{xlsx}, \code{json}, \code{rds}, \code{parquet}, \code{ods}, \code{shp}, \code{geojson} and \code{feather}). Each file is then read using the appropriate function:
 #' \itemize{
 #'   \item \code{readr::read_csv} for CSV files.
 #'   \item \code{readr::read_tsv} for TSV files.
@@ -13,6 +13,8 @@
 #'   \item \code{readRDS} for RDS files.
 #'   \item \code{arrow::read_parquet} for Parquet files.
 #'   \item \code{readODS::read_ods} for ODS files
+#'   \item \code{sf::read_sf} for SHP and GEOJSON files.
+#'   \item \code{arrow::read_feather} for Feather files.
 #' }
 #' The function stops with an error if any of the following occur:
 #' \itemize{
@@ -43,9 +45,15 @@
 #'   iris_datasets<-get_dataset("gpreda/iris-dataset")
 #'   #ods
 #'   new_houses <- get_dataset("nm8883/new-houses-built-each-year-in-england")
+#'   #shp
+#'   india_states <- get_dataset("dhruvanurag20/final-shp")
+#'   #geojson
+#'   montreal <- get_dataset("rinichristy/montreal-geojson")
+#'   #feather
+#'   ncaa <- get_dataset("corochann/ncaa-march-madness-2020-womens")
 #' }
 #'
-#' @import httr readr withr readxl jsonlite arrow
+#' @import httr readr withr readxl jsonlite arrow sf
 #' @export
 get_dataset <- function(dataset) {
   # Construct the metadata URL and fetch the metadata from Kaggle
@@ -86,7 +94,7 @@ get_dataset <- function(dataset) {
   # List files of popular dataset types in the unzipped folder.
   data_files <- list.files(
     unzip_dir, 
-    pattern = "\\.(csv|tsv|xls|xlsx|json|rds|parquet|ods)$", 
+    pattern = "\\.(csv|tsv|xls|xlsx|json|rds|parquet|ods|shp|geojson|feather)$", 
     ignore.case = TRUE, 
     full.names = TRUE
   )
@@ -112,17 +120,19 @@ get_dataset <- function(dataset) {
       return(arrow::read_parquet(file))
     } else if (ext == "ods") {
       return(readODS::read_ods(file))
-    } else {
+    } else if (ext == "shp" | ext == "geojson"){
+      return(sf::read_sf(file))
+    } else if (ext == "feather"){
+      return(arrow::read_feather(file))
+    }else {
       warning(paste("File type", ext, "is not supported."))
       return(NULL)
     }
   }
   
   # Read each file into R using the appropriate function
-  datasets <- lapply(data_files, function(x) read_data_file(x)|> tibble::as_tibble())
-  
+  datasets <- lapply(data_files, function(x) read_data_file(x))
 
-  
   # Remove any unsuccessful reads (if any file returned NULL)
   datasets <- datasets[!sapply(datasets, is.null)]
   
