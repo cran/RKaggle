@@ -1,6 +1,6 @@
 Package: RKaggle
 Title: 'Kaggle' Dataset Downloader 'API'
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Benjamin", "Smith", 
            email = "benyamin.smith@mail.utoronto.ca", 
@@ -14,11 +14,11 @@ Encoding: UTF-8
 Imports: httr, readr, withr, jsonlite, arrow, readODS, readxl, sf
 Depends: R (>= 4.1.0)
 Suggests: tibble, conflicted
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 NeedsCompilation: no
-Packaged: 2025-05-09 03:42:44 UTC; ben29
+Packaged: 2026-11-10 19:44:14 UTC; ben29
 Author: Benjamin Smith [aut, cre] (ORCID:
     <https://orcid.org/0009-0007-2206-0177>)
 Maintainer: Benjamin Smith <benyamin.smith@mail.utoronto.ca>
 Repository: CRAN
-Date/Publication: 2025-05-09 04:00:02 UTC
+Date/Publication: 2026-11-10 20:00:02 UTC
